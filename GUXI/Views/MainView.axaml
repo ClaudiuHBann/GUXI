@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:GUXI.ViewModels"
+			 xmlns:ui="using:FluentAvalonia.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 Loaded="OnGUXILoaded"
+			 Unloaded="OnGUXIUnloaded"
+             x:Class="GUXI.Views.MainView"
+             x:DataType="vm:MainViewModel">
+
+	<ui:NavigationView PaneDisplayMode="Top"
+				   x:Name="navigationView"
+				   IsSettingsVisible="False">
+
+		<ui:NavigationView.MenuItems>
+
+			<ui:NavigationViewItem Content="Calculator"
+								   Tag="CalculatorView" />
+
+			<ui:NavigationViewItem Content="About"
+								   Tag="About"
+								   IconSource="Contact" />
+
+		</ui:NavigationView.MenuItems>
+
+	</ui:NavigationView>
+
+</UserControl>
