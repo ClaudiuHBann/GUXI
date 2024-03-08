@@ -13,15 +13,15 @@ public class NotificationService : ServiceBase
 {
     private WindowNotificationManager? _manager = null;
 
-    private ObservableCollection<INotification>? _cache = [];
+    private ObservableCollection<INotification> _cache = [];
 
     public override void Initialize()
     {
-        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (Avalonia.Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             _manager = new(desktop.MainWindow);
         }
-        else if (Avalonia.Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        else if (Avalonia.Application.Current!.ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             _manager = new(TopLevel.GetTopLevel(singleViewPlatform.MainView));
         }
@@ -42,7 +42,7 @@ public class NotificationService : ServiceBase
 
             foreach (var notification in _cache)
             {
-                _manager?.Show(notification);
+                _manager!.Show(notification);
             }
 
             _cache.Clear();
@@ -58,7 +58,7 @@ public class NotificationService : ServiceBase
         }
         else
         {
-            _manager?.Show(notification);
+            _manager!.Show(notification);
         }
     }
 

@@ -27,6 +27,10 @@ public static class DI
     public static Type Create<Type>(params object[] parameters) =>
         ActivatorUtilities.CreateInstance<Type>(ServiceProvider, parameters);
 
+    public static object Create(Type type,
+                                params object[] parameters) => ActivatorUtilities.CreateInstance(ServiceProvider, type,
+                                                                                                 parameters);
+
     public static void Initialize() => Apply(service => service.Initialize());
     public static void Uninitialize() => Apply(service => service.Uninitialize());
 

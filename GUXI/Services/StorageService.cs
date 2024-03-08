@@ -28,13 +28,13 @@ public class StorageService : ServiceBase
         }
     }
 
-    public T? Load<T>(string key)
+    public T Load<T>(string key)
         where T : class
     {
         var path = Path.Combine(AppDataGUXIDirectory, key);
         if (!File.Exists(path))
         {
-            return null;
+            throw new FileNotFoundException($"File not found: {path}");
         }
 
         var json = File.ReadAllBytes(path);

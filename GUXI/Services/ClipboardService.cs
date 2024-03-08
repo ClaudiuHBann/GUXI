@@ -16,11 +16,11 @@ public class ClipboardService : ServiceBase
 
     public override void Initialize()
     {
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             _clipboard = desktop.MainWindow?.Clipboard;
         }
-        else if (Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        else if (Application.Current!.ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             _clipboard = TopLevel.GetTopLevel(singleViewPlatform.MainView)?.Clipboard;
         }

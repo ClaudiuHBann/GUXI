@@ -8,6 +8,4 @@
              x:DataType="vm:CalculatorViewModel"
              x:Class="GUXI.Views.CalculatorView">
 
-	<pages:CalculatorPage />
-
 </UserControl>

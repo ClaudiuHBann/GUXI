@@ -12,7 +12,7 @@ using GUXI.Views.Dialogs;
 
 namespace GUXI.Views
 {
-public partial class MainView : UserControl
+public partial class MainView : ViewBase
 {
     private Dictionary<string, UserControl> _views = [];
     private int _NVSelectedIndexLast = 0;
@@ -38,7 +38,7 @@ public partial class MainView : UserControl
             return;
         }
 
-        if (item.Tag?.ToString() == "About")
+        if (item.Tag!.ToString() == "About")
         {
             // TODO: can we remove this workaround?
             // select back the last item outside this method so the property changed will propagate
@@ -56,43 +56,36 @@ public partial class MainView : UserControl
         _NVSelectedIndexLast = navigationView.MenuItems.IndexOf(e.SelectedItem);
     }
 
-    private UserControl? CreateView(NavigationViewItem item)
+    private UserControl CreateView(NavigationViewItem item)
     {
         // search the view cache first
         var viewTypeName = $"GUXI.Views.{item.Tag}";
-            if (_views.TryGetValue(viewTypeName, out UserControl? value))
-            {
-                return value;
-            }
+        if (_views.TryGetValue(viewTypeName, out UserControl? value))
+        {
+            return value;
+        }
 
-            // create the view
-            var viewType = Type.GetType(viewTypeName);
-            if (viewType == null)
-            {
-                return null;
-            }
+        // create the view model
+        var viewModelTypeName = $"GUXI.ViewModels.{item.Tag}Model";
+        var viewModelType =
+            Type.GetType(viewModelTypeName) ?? throw new TypeAccessException($"Type not found: {viewModelTypeName}");
+        var viewModel = DI.Create(viewModelType);
 
-            var view = Activator.CreateInstance(viewType);
-            if (view is not UserControl userControl)
-            {
-                return null;
-            }
+        // create the view
+        var viewType = Type.GetType(viewTypeName) ?? throw new TypeAccessException($"Type not found: {viewTypeName}");
+        var view = DI.Create(viewType);
+        if (view is not ViewBase viewBase)
+        {
+            throw new InvalidCastException($"Type not derived from UserControl: {viewTypeName}");
+        }
 
-            // create the view model
-            var viewModelTypeName = $"GUXI.ViewModels.{item.Tag}Model";
-            var viewModelType = Type.GetType(viewModelTypeName);
-            if (viewModelType == null)
-            {
-                return null;
-            }
-            var viewModel = Activator.CreateInstance(viewModelType);
+        viewBase.DataContext = viewModel;
 
-            userControl.DataContext = viewModel;
+        // add the view to our cache
+        _views.Add(viewTypeName, viewBase);
 
-            // add the view to our cache
-            _views.Add(viewTypeName, userControl);
-
-            return userControl;
+        viewBase.Initialize();
+        return viewBase;
     }
 
     private void OnGUXILoaded(object? sender, RoutedEventArgs e) => DI.Initialize();
