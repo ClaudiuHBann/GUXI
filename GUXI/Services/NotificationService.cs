@@ -13,7 +13,7 @@ public class NotificationService : ServiceBase
 {
     private WindowNotificationManager? _manager = null;
 
-    private ObservableCollection<INotification> _cache = [];
+    private readonly ObservableCollection<INotification> _cache = [];
 
     public override void Initialize()
     {
@@ -46,13 +46,12 @@ public class NotificationService : ServiceBase
             }
 
             _cache.Clear();
-            _cache = null;
         };
     }
 
     private void Notify(Notification notification)
     {
-        if (_cache != null)
+        if (_cache.Count > 0)
         {
             _cache.Add(notification);
         }
